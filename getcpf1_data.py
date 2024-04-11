@@ -2,7 +2,8 @@
 # {"type": "vertebrate", "id": 1, "name": "Homo sapiens (GRCh38/hg38) - Human"}
 import requests
 import pandas as pd
-import datetime
+import sys
+import argparse
 
 def get_gene_list(organism_id, start_page_num, end_page_num):
     gene_list = []
@@ -72,9 +73,9 @@ def get_offtarget_list(target_dict):
     return df
     
 
-def __main__():
-    start_page_num = 1
-    end_page_num = 1
+def __main__(num1, num2):
+    start_page_num = num1
+    end_page_num = num2
     gene_list = get_gene_list(1, start_page_num, end_page_num)
     target_dict = get_target_list(gene_list)
     offtarget_df = get_offtarget_list(target_dict)
@@ -82,5 +83,13 @@ def __main__():
     offtarget_df.to_csv(f"offtarget_data_page{start_page_num}_{end_page_num}.csv", index=False)
 
 if __name__ == "__main__":
-    __main__()
+    parser = argparse.ArgumentParser(description="Script that gather Cpf1-Data base on page number")
+    parser.add_argument("--start", required=True, type=int)
+    parser.add_argument("--end", required=True, type=int)
+    args = parser.parse_args()
+
+    num1 = args.start
+    num2 = args.end
+
+    __main__(num1, num2)
 
